@@ -16,9 +16,11 @@ with gzip.open("1crn.pdb.gz", "rt") as f:
             atom = {
                 "serial_number": int(line[6:11].strip()),
                 "atom_name": line[12:16].strip(),
+
+                "chain_id": line[21].strip(),
                 "residue_name": line[17:20].strip(),
                 "residue_number": int(line[22:26].strip()),
-                "chain_id": line[21].strip(),
+
                 "x": float(line[30:38].strip()),
                 "y": float(line[38:46].strip()),
                 "z": float(line[46:54].strip())
@@ -36,6 +38,13 @@ with gzip.open("1crn.pdb.gz", "rt") as f:
                 protein[chain][residue] = []
 
             protein[chain][residue].append(atom)
+
+
+
+    df = pd.DataFrame(atoms)
+    print(df, "\n")
+
+    #print(df.iloc[[1]])
 
     #print(protein.keys())
     #print(len(protein["A"]))
