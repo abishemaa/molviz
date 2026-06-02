@@ -39,10 +39,8 @@ with gzip.open("1crn.pdb.gz", "rt") as f:
 
             protein[chain][residue].append(atom)
 
-
-
     df = pd.DataFrame(atoms)
-    print(df, "\n")
+    #print(df, "\n")
 
     #print(df.iloc[[1]])
 
