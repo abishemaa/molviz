@@ -294,3 +294,88 @@ DataFrame stage.
 - Create geometry objects
 - Render atoms as spheres
 - Build first 3D viewer
+
+## Bond Detection
+
+Current implementation:
+
+```python
+distance(atom1, atom2) <= 2.0
+```
+
+This is a simple visualization heuristic.
+
+### Typical Covalent Bond Lengths
+
+| Bond | Length (Å) |
+|--------|--------|
+| C-H | ~1.1 |
+| C-C | ~1.5 |
+| C-N | ~1.5 |
+| C-O | ~1.4 |
+| S-S | ~2.0 |
+
+### Current Method
+
+For every atom pair:
+
+1. Calculate distance
+2. If distance <= cutoff:
+   - create bond
+
+Advantages:
+
+- simple
+- easy to understand
+- sufficient for first visualizer
+
+Limitations:
+
+- ignores atom type
+- ignores chemistry
+- may create false bonds
+
+### Professional Approaches
+
+#### PDB CONECT Records
+
+Some PDB files explicitly list bonds:
+
+```text
+CONECT 12 15 18
+```
+
+Meaning:
+
+- atom 12 bonded to atom 15
+- atom 12 bonded to atom 18
+
+#### Covalent Radii
+
+Example:
+
+```text
+Carbon radius
++
+Oxygen radius
++
+Tolerance
+```
+
+Bond exists if:
+
+```text
+distance < radius_sum + tolerance
+```
+
+#### Chemical Topology
+
+Use residue templates and chemistry rules to determine valid bonds.
+
+#### Force Fields
+
+Advanced molecular modeling software may derive bonding from force-field data.
+
+### Future Goal
+
+Replace fixed-distance bonding with covalent-radius based bonding.

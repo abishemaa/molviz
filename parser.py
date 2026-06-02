@@ -4,6 +4,21 @@ import pandas as pd
 
 #parser = PDBParser()
 
+# Protein hierarchy:
+#
+# Protein
+#   └── Chain
+#         └── Residue
+#               └── Atom
+#
+# Internal representation:
+#
+# {
+#     "A": {
+#         1: [atom, atom, atom],
+#         2: [atom, atom]
+#     }
+# }
 protein = {}
 
 atoms = []
@@ -13,6 +28,24 @@ chains = set()
 with gzip.open("1crn.pdb.gz", "rt") as f:
     for line in f:
         if line.startswith("ATOM"):
+            # PDB ATOM record parser.
+            # PDB files use fixed-width columns rather than delimiters.
+                # Example: ATOM      1  N   THR A   1      17.047  14.099   3.625
+            # Fields currently parsed:
+                # - serial_number: unique atom identifier in file
+                # - atom_name: atom type within residue (N, CA, C, O, ...)
+                # - chain_id: protein chain identifier
+                # - residue_name: amino acid name (THR, CYS, GLY, ...)
+                # - residue_number: residue position within chain
+                # - x,y,z: atom coordinates in Angstroms (Å)
+            # Fields NOT yet parsed:
+                # - occupancy
+                # - B-factor (temperature factor)
+                # - element symbol
+                # - charge
+                # - alternate locations
+                # - insertion codes
+            # Future:Parse additional fields for more accurate molecular modeling.
             atom = {
                 "serial_number": int(line[6:11].strip()),
                 "atom_name": line[12:16].strip(),
